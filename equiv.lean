@@ -6,39 +6,19 @@ variables {α : Type u} {β : Type v} {γ : Type w}
 open equiv 
 
 namespace equiv
-
-
 section instances
-
 variables (e : α ≃ β)  
 
 protected def has_scalar [has_scalar γ β] : has_scalar γ α := ⟨λ (a:γ)  x, e.symm ( a • e x)⟩
-
-lemma smul_def [has_scalar γ β] (a: γ) (x : α) :
-  @has_scalar.smul _ _ (equiv.has_scalar e) a x = e.symm ( a • e x) := rfl
+lemma smul_def [has_scalar γ β] (a: γ) (x : α) :  @has_scalar.smul _ _ (equiv.has_scalar e) a x = e.symm ( a • e x) := rfl
 
 protected def mul_action [monoid γ][mul_action γ  β] : mul_action γ  α :=
 { one_smul := by simp [smul_def],
   mul_smul := by simp [smul_def, mul_action.mul_smul],
   ..equiv.has_scalar e  }
 
-
---protected def has_dist [has_dist β]: has_dist α := 
---⟨ λ x y, @has_dist.dist _ _ (e x) (e y)   ⟩ 
-
-
-
-
-
-
 end instances
-
 end equiv
-
-
-
-
-
 
 namespace pfun
 
@@ -57,8 +37,6 @@ namespace compatible
   protected lemma symm (h : f ~. g) : g ~. f := λx, (h x).symm
  end compatible
 
-
-
 end pfun
 
 
@@ -73,30 +51,15 @@ structure pequiv (α : Type*) (β : Type*) :=
 infixr ` ≃. `:25 := pequiv
 
 
-
-
-
-
-
-
-
 namespace roption
 noncomputable theory
 
-
 variable [normed_field α]
-
 instance : has_add (roption α) := ⟨ λ x y, ⟨x.dom ∧ y.dom, λ h, x.get (h.1)+ y.get (h.2)  ⟩  ⟩
-
 instance   :  has_zero (roption (α ))  :=⟨some (0:α)⟩
-
 instance   :  has_one (roption (α ))  :=⟨some (1:α)⟩
-
 instance : has_mul (roption α) := ⟨ λ x y, ⟨x.dom ∧ y.dom, λ h, x.get (h.1) * y.get (h.2)  ⟩  ⟩
-
 instance  : has_scalar α (roption α) := ⟨λ a f, ⟨f.dom, λ h, a* (f.get h) ⟩ ⟩
-
-
 instance : has_neg (roption α) := ⟨ λ x, ⟨x.dom , λ h, -x.get h ⟩  ⟩
 
 end roption
