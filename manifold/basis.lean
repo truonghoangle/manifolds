@@ -18,9 +18,6 @@ structure euclidean (α : Type*) :=
    (dim : ℕ)
   (equiv : carrier  ≃ (Π(i:fin dim),α ))
 
-
-
-
 namespace euclidean
 variable (E:euclidean α )
 
@@ -28,18 +25,15 @@ def to_vector (E:euclidean α):  E.carrier  ≃ vector α (E.dim) := equiv.trans
 
 instance : has_coe_to_sort (euclidean α)  := ⟨_, @euclidean.carrier α⟩
 
-instance to_topological_space (E : euclidean α  ) : 
-  topological_space E := induced (to_vector E) (by apply_instance)
+instance to_topological_space (E : euclidean α  ) :  topological_space E := induced (to_vector E) (by apply_instance)
 
 
-def to_Top (E : euclidean α  ) : Top :=
-⟨E, by apply_instance⟩
+def to_Top (E : euclidean α  ) : Top :=⟨E, by apply_instance⟩
 
 instance : has_coe (euclidean α)  Top :=⟨to_Top⟩
 
 
-def Euclidean_space (n : ℕ) : euclidean α  :=
-⟨vector α  n, n, (fun_vector n).symm ⟩
+def Euclidean_space (n : ℕ) : euclidean α  :=⟨vector α  n, n, (fun_vector n).symm ⟩
 
 notation `α^` := Euclidean_space
 
@@ -52,17 +46,14 @@ instance : mul_action α E:= equiv.mul_action E.equiv
 instance :distrib_mul_action α E:=
 { distrib_mul_action. 
    smul_add  := by {repeat{intro},simp[equiv.smul_def,equiv.add_def],by library_search },
-   smul_zero := by {repeat{intro},simp[equiv.smul_def,equiv.zero_def]}
-}
+   smul_zero := by {repeat{intro},simp[equiv.smul_def,equiv.zero_def]}}
 
 
 
 instance : semimodule α E:=
 { semimodule.
    zero_smul := by{ repeat {intro},simp[equiv.smul_def], simp[equiv.zero_def]},
-   add_smul  := by {repeat {intro},simp[equiv.smul_def, equiv.add_def, semimodule.add_smul]}
-}
-
+   add_smul  := by {repeat {intro},simp[equiv.smul_def, equiv.add_def, semimodule.add_smul]}}
 
 instance : module α E:={ .}
 instance   : vector_space α E:={.} 
@@ -72,13 +63,10 @@ section dual
 lemma equiv_vec: E ≃ₗ[α] (Π (i: fin(E.dim)), α):=
 { add:= by{simp[equiv.add_def],
  repeat {intro},
- have h:= equiv.apply_symm_apply E.equiv (E.equiv x + E.equiv y), by library_search
- },
+ have h:= equiv.apply_symm_apply E.equiv (E.equiv x + E.equiv y), by library_search },
   smul:= by{simp[equiv.smul_def],repeat {intro},
-  have h:= equiv.apply_symm_apply E.equiv (c •(E.equiv) x), by library_search
-   },
-  .. E.equiv
-}
+  have h:= equiv.apply_symm_apply E.equiv (c •(E.equiv) x), by library_search},
+  .. E.equiv}
 
 
 lemma dim_eq :  vector_space.dim α E = E.dim:=
@@ -86,12 +74,9 @@ by{  have h:= @dim_fun α (fin E.dim) _ _ α _ _,
   have h1:= @dim_of_field α _,
   rw[h1, mul_one,fintype.card_fin] at h,
   have H :=linear_equiv.dim_eq_lift (@equiv_vec α _ E),
-  simp[h] at H,
-  simp[H] 
-}
+  simp[h] at H, simp[H] }
 
-lemma dim_lt: vector_space.dim α E <  cardinal.omega :=
-by { simp[dim_eq,cardinal.nat_lt_omega]}
+lemma dim_lt: vector_space.dim α E <  cardinal.omega :=by { simp[dim_eq,cardinal.nat_lt_omega]}
 
 lemma dual_equiv :E ≃ₗ[α] module.dual α E:=
 begin
@@ -114,8 +99,7 @@ begin
 end
 
 
-def dual:euclidean α  := 
-⟨(E →ₗ[α] α), E.dim, (@dual_equiv_std α _ E).to_equiv ⟩ 
+def dual:euclidean α  := ⟨(E →ₗ[α] α), E.dim, (@dual_equiv_std α _ E).to_equiv ⟩ 
 
 end dual
 
@@ -125,57 +109,35 @@ def std_basis (E:euclidean α) (i:fin E.dim): E := E.equiv.inv_fun (@Euclidean.s
 
 instance has_norm : has_norm (E:euclidean α) :=⟨λ  x,  ∥E.equiv x∥⟩
 
-instance : has_dist (E:euclidean α )  := 
-⟨ λ x y, @has_dist.dist _ _ (E.equiv x) (E.equiv y)   ⟩ 
+instance : has_dist (E:euclidean α )  := ⟨ λ x y, @has_dist.dist _ _ (E.equiv x) (E.equiv y)   ⟩ 
 
  instance metric_space  :metric_space (E:euclidean α ) :=
 { metric_space.
   dist_self:= by {intro, simp[dist], 
     have h:= (@Euclidean.normed_space α E.dim _).dist_self,
-    have h1:=@h (E.equiv x),
-    simp [dist] at h1,
-    apply h1
-  },
+    have h1:=@h (E.equiv x),simp [dist] at h1,    apply h1  },
   dist_comm := by { simp[dist], repeat{intro},
   have h:=(@Euclidean.normed_space α E.dim _).dist_comm,
-  simp [dist] at h,
-  apply h,   
-  }, 
+  simp [dist] at h, apply h, }, 
   dist_triangle:= by { simp[dist], repeat{intro},
   have h:=(@Euclidean.normed_space α E.dim _).dist_triangle,
-  simp [dist] at h,
-  apply h,
-  },
+  simp [dist] at h,  apply h,},
   eq_of_dist_eq_zero:= by { simp[dist], intro, intro,
   have h:=(@Euclidean.normed_space α E.dim _).eq_of_dist_eq_zero,
   simp [dist] at h,
-  intro,
-  have heq:=@equiv.apply_eq_iff_eq _ _ E.equiv x y,
-  rwa[iff.comm] at heq,
-  rw [heq], 
-  apply h,
-  apply a 
-  },
-}
+  intro,  have heq:=@equiv.apply_eq_iff_eq _ _ E.equiv x y,  
+  rwa[iff.comm] at heq,  rw [heq],   apply h,  apply a   },}
 
 
 instance normed_group : normed_group (E:euclidean α) :=
 {normed_group.
  dist_eq:= by {simp[norm,dist,equiv.add_def,equiv.neg_def], repeat{intro},
- have h:= (@Euclidean.normed_space α E.dim _).dist_eq,
- simp[norm,dist] at h,
- apply h,
- },
-}
+ have h:= (@Euclidean.normed_space α E.dim _).dist_eq, simp[norm,dist] at h, apply h,},}
 
 instance :normed_space α (E:euclidean α):= 
 {normed_space.
   norm_smul:= by {simp[norm,equiv.smul_def], repeat {intro},
-  have h:= (@Euclidean.normed_space α E.dim _).norm_smul,
-  simp[norm,equiv.smul_def] at h,
-  apply h,
-  }
-}
+  have h:= (@Euclidean.normed_space α E.dim _).norm_smul,  simp[norm,equiv.smul_def] at h,  apply h,}}
 
 end euclidean
 
