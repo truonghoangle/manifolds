@@ -54,43 +54,31 @@ diff.𝒞_infinity   (c₂.to_fun ∘. c₁.inv_fun) ∧
 diff.𝒞_infinity    (c₁.to_fun ∘. c₂.inv_fun)
 
 
- structure manifold E : cartesian α    :=
-  (carrier : Top)
-  (struct2 : t2_space carrier)
-  (struct3 : second_countable_topology carrier)
-  (charts : set (chart carrier E))
+ structure manifold (E : cartesian α ) (X:Top)   :=
+  (struct1 : t2_space X)
+  (struct2 : second_countable_topology X)
+  (charts : set (chart X E))
   (cover : ⋃₀ (chart.domain '' charts) = set.univ)
 
 
- structure diff_manifold (E : cartesian α ) extends manifold E      :=
+ structure diff_manifold (E : cartesian α ) (X:Top) extends manifold E X      :=
   (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → diff_compatible_charts  c₁ c₂)
 
 
- structure C_infinity_manifold (E : cartesian α ) extends manifold (E)  :=
+ structure C_infinity_manifold (E : cartesian α) (X:Top) extends manifold E X  :=
   (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → C_infinity_compatible_charts  c₁ c₂)
 
- structure C_manifold (n:ℕ) (E : cartesian α ) extends manifold (E)  :=
+ structure C_manifold (n:ℕ) (E : cartesian α ) (X:Top) extends manifold E X  :=
   (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → C_compatible_charts n c₁ c₂)
 
 
 
---def real_manifold (E : cartesian ℝ ) := diff_manifold (E : cartesian ℝ )
+def real_manifold (E : cartesian ℝ ) := diff_manifold (E : cartesian ℝ ) 
 
---def complex_manifold (E : cartesian ℂ ) := diff_manifold (E : cartesian ℂ )
-
-
+def complex_manifold (E : cartesian ℂ ) := diff_manifold (E : cartesian ℂ )
 
 
-namespace diff_manifold
 
-def dim (M:diff_manifold E) :ℕ := E.dim
-
-def curve (M:diff_manifold E):Prop := dim M==1
-
-def surface (M:diff_manifold E):Prop := dim M==2
-
-def threefold (M:diff_manifold E):Prop := dim M==3
-end diff_manifold
 
 
 
