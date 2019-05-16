@@ -20,6 +20,7 @@ namespace map
 protected def has_zero [has_zero β] : has_zero (α → β) := ⟨λ x, 0⟩
 lemma zero_def [has_zero β] (x:α) : @has_zero.zero _ map.has_zero  x = 0 := rfl
 
+
 protected def has_one [has_one β] : has_one (α → β )  := ⟨λ x, (1:β)   ⟩
 lemma one_def [has_one β] (x:α) : @has_one.one _ map.has_one x = 1 := rfl
 
@@ -220,6 +221,8 @@ by{ rw[pfun.dom_eq],simp[ const_def],}
 
 
 end const
+
+
 
 
 

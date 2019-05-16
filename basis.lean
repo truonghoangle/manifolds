@@ -6,7 +6,7 @@ Author: Hoang Le Truong.
 -/
 
 import  topology.constructions  
-import equiv
+import pmap
 open topological_space 
 
 noncomputable theory
