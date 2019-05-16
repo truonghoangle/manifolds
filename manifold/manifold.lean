@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Author: Hoang Le Truong.
 
 -/
-import manifold.differentiable
-
+import manifold.basis
 open topological_space  
 
 noncomputable theory
@@ -13,7 +12,7 @@ universes u v w
 
 variables {α : Type} {β : Type} {γ : Type w} {n : ℕ}
 
-variable [normed_field α]
+variable [nondiscrete_normed_field α]
 
 variables {E : cartesian α } 
 variables {F : cartesian α } 
@@ -40,43 +39,29 @@ def codomain (c : chart X E) : set E := c.inv_fun.dom
 
 end chart
 
-def diff_compatible_charts {X : Top}  (c₁ c₂ : chart X E) : Prop :=
-diff.is_dif_map   (c₂.to_fun ∘. c₁.inv_fun) ∧ 
-diff.is_dif_map   (c₁.to_fun ∘. c₂.inv_fun)
+def lift_fun (E  : cartesian α) (F  : cartesian α) (h:(E→. α) → Prop) 
+ : ( E →. F )→  Prop := λ f, ∀  i: fin (F.dim),  h (pfun.lift (cartesian.proj F i).to_fun ∘. f )
 
 
-def C_compatible_charts {X : Top} (n:ℕ) (c₁ c₂ : chart X E) : Prop :=
-diff.𝒞_n n  (c₂.to_fun ∘. c₁.inv_fun) ∧ 
-diff.𝒞_n n   (c₁.to_fun ∘. c₂.inv_fun)
-
-def C_infinity_compatible_charts {X : Top}  (c₁ c₂ : chart X E) : Prop :=
-diff.𝒞_infinity   (c₂.to_fun ∘. c₁.inv_fun) ∧ 
-diff.𝒞_infinity    (c₁.to_fun ∘. c₂.inv_fun)
+def compatible_charts  {X : Top}  (h:(E→. α) → Prop) (c₁ c₂ : chart X E) : Prop :=
+lift_fun E E h   (c₂.to_fun ∘. c₁.inv_fun) ∧ 
+lift_fun E E h   (c₁.to_fun ∘. c₂.inv_fun)
 
 
- structure manifold (E : cartesian α ) (X:Top)   :=
+
+
+
+ class manifold {α:Type} [nondiscrete_normed_field α] (E : cartesian α ) (X:Top)   :=
   (struct1 : t2_space X)
   (struct2 : second_countable_topology X)
   (charts : set (chart X E))
   (cover : ⋃₀ (chart.domain '' charts) = set.univ)
 
 
- structure diff_manifold (E : cartesian α ) (X:Top) extends manifold E X      :=
-  (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → diff_compatible_charts  c₁ c₂)
 
-
- structure C_infinity_manifold (E : cartesian α) (X:Top) extends manifold E X  :=
-  (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → C_infinity_compatible_charts  c₁ c₂)
-
- structure C_manifold (n:ℕ) (E : cartesian α ) (X:Top) extends manifold E X  :=
-  (compatible : ∀{{c₁ c₂}}, c₁ ∈ charts → c₂ ∈ charts → C_compatible_charts n c₁ c₂)
-
-
-
-def real_manifold (E : cartesian ℝ ) := diff_manifold (E : cartesian ℝ ) 
-
-def complex_manifold (E : cartesian ℂ ) := diff_manifold (E : cartesian ℂ )
-
+ class manifold_prop  {α:Type}  [nondiscrete_normed_field α] (E : cartesian α )  (X:Top)    extends  manifold E X      :=
+  (property: (E→. α) → Prop)
+  (compatible : ∀{{c₁ c₂}}, c₁  ∈  charts → c₂∈ charts   → compatible_charts property  c₁ c₂  )
 
 
 

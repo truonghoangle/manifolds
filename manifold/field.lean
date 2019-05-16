@@ -5,7 +5,7 @@ Author: Hoang Le Truong.
 
 -/
 import         analysis.normed_space.basic
-import equiv
+import pmap
 open  set   vector  real 
 
 local attribute [instance] classical.prop_decidable

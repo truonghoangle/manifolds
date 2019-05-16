@@ -12,7 +12,7 @@ open topological_space set vector  euclidean
 noncomputable theory
 universe u
 
-variables {α : Type }  {n : ℕ}
+variables {α : Type}  {n : ℕ}
 variable [normed_field α]
 
 instance discrete: discrete_field α:= normed_field.to_discrete_field α
@@ -73,6 +73,7 @@ lemma equiv_vec: E ≃ₗ[α] (Π (i: fin(E.dim)), α):=
   smul:= by{simp[equiv.smul_def],repeat {intro},
   have h:= equiv.apply_symm_apply E.equiv (c •(E.equiv) x), by library_search},
   .. E.equiv}
+
 
 lemma dim_eq :  vector_space.dim α E = E.dim:=
 by{  have h:= @dim_fun α (fin E.dim) _ _ α _ _,
